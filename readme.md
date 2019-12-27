@@ -20,7 +20,7 @@ Some benefits of this approach are:
 - More readable and maintainable code
 
 `Purity` -> Purity means that all functions always returns the same output given the same parameters, and they don't produce
-side effects, that is, they don't alter the state of any object or variable, event at operational system level.
+side effects, that is, they don't alter the state of any object or variable, even at operational system level.
 The pure functions brings the same benefits of immutability.
 
 `Monads` -> I chose to use the `Option` Monad at domain level, so joining this with the null safety feature of Kotlin, 
@@ -57,7 +57,7 @@ for the evaluation of one or more `Rule` instance. A `Rule` is a interface that 
 a `customer` and a `riskProfile` and returns a new (immutable) `riskProfile` based on its own logic.
 
 #### Insurance
-This layer contains de business logic for calculating the `Risk Profile` for all the lines of insurance.
+This layer contains the business logic for calculating the `Risk Profile` for all the lines of insurance.
 Here are implemented all the `Rules` for the lines of insurance and each line of insurance has its own `Domain Service`,
 responsible for aggregating the rules for that line.
 
