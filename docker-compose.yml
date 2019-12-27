@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  risk-insurance-test:
+    build:
+      context: .
+      target: builder
+    image: origin/risk-insurance-test
+
+  risk-insurance:
+    build:
+      context: .
+      target: service
+    image: origin/risk-insurance-service
+    hostname: risk-insurance
+    ports:
+      - "8080:8080"
