@@ -11,7 +11,7 @@ data class Customer(
     val income: Int = 0,
     val maritalStatus: MaritalStatus = MaritalStatus.SINGLE,
     val house: Option<House> = None,
-    val vehicle: Option<Vehicle> = None
+    val vehicles: List<Vehicle> = emptyList()
 )
 
 enum class MaritalStatus {

@@ -4,11 +4,6 @@ import org.junit.jupiter.api.Test
 
 class RiskProfileTest {
     @Test
-    fun `RiskProfile should be a value object`() {
-        assert(RiskProfile::class.isData)
-    }
-
-    @Test
     fun `ineligible should de immutable`() {
         val profile = RiskProfile("test", true, Score(3))
         val newProfile = profile.ineligible()

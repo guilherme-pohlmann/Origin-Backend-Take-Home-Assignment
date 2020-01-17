@@ -6,7 +6,7 @@ import com.origin.risk.domain.engine.Rule
 
 internal object VehicleRule : Rule {
     override fun apply(customer: Customer, riskProfile: RiskProfile) =
-        if(customer.vehicle.isEmpty())
+        if(customer.vehicles.isEmpty())
             riskProfile.ineligible()
         else
             riskProfile

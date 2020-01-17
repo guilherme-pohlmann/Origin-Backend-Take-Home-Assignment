@@ -1,6 +1,6 @@
 package com.origin.risk.domain.engine
 
-data class RiskProfile(
+open class RiskProfile(
     val name: String = "",
     val eligible: Boolean = false,
     val score: Score = Score(0)

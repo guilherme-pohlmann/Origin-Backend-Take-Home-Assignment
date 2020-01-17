@@ -118,7 +118,7 @@ class RiskProfileControllerTest {
     @Test
     fun `users can have 0 or 1 vehicle, when they do, it has just one attribute a positive integer corresponding to the year it was manufactured`() {
         val request = RiskProfileRequest(
-            vehicle = null,
+            vehicles = null,
             riskQuestions = arrayOf(1,1,1)
         )
 

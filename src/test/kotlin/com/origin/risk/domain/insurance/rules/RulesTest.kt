@@ -125,10 +125,10 @@ class RulesTest {
     inner class VehicleAgeRuleTest {
         @Test
         fun `if the user's vehicle was produced in the last 5 years, add 1 risk point`() {
-            val customer = Customer(vehicle = Vehicle(LocalDate.now().year - 2).toOption())
+            val customer = Customer(vehicles = listOf(Vehicle(0,LocalDate.now().year - 2)))
             val profile = RiskProfile(score = Score(1))
 
-            assert(VehicleAgeRule.apply(customer, profile).score.value == 2)
+            assert(VehicleAgeRule(customer.vehicles.first()).apply(customer, profile).score.value == 2)
         }
     }
 

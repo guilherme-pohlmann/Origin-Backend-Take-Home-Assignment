@@ -30,13 +30,16 @@ class RiskProfileServiceTest {
     }
 
     @Test
-    fun `if the user is under 30 years old, deduct 2 risk points from all lines of insurance, If she is between 30 and 40 years old, deduct 1`() {
-        val customer = Customer(age = 28)
+    fun `if the user is under 30 years old, deduct 2 risk points from all lines of insurance`() {
+        val customer = Customer(age = 28, vehicles = listOf(Vehicle(0, LocalDate.now().year - 6)))
         val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,1))
 
         assert(profiles.all { it.score.value == 1})
+    }
 
-        val customerOlder = Customer(age = 35)
+    @Test
+    fun `If she is between 30 and 40 years old, deduct 1 risk points from all lines of insurance`() {
+        val customerOlder = Customer(age = 35, vehicles = listOf(Vehicle(0, LocalDate.now().year - 6)))
         val profilesOlderCustomer = RiskProfileService.riskProfile(customerOlder, arrayOf(1,1,1))
 
         assert(profilesOlderCustomer.all { it.score.value == 2})
@@ -46,7 +49,8 @@ class RiskProfileServiceTest {
     fun `if her income is above $200k, deduct 1 risk point from all lines of insurance`() {
         val customer = Customer(
             income = 300000,
-            age = 50
+            age = 50,
+            vehicles = listOf(Vehicle(0, LocalDate.now().year - 6))
         )
         val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,1))
 
@@ -95,7 +99,7 @@ class RiskProfileServiceTest {
     @Test
     fun `if the user's vehicle was produced in the last 5 years, add 1 risk point to that vehicle’s score`() {
         val customer = Customer(
-            vehicle = Vehicle(LocalDate.now().year - 2).toOption(),
+            vehicles = listOf(Vehicle(0, LocalDate.now().year - 2)),
             age = 50
         )
         val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,1))

@@ -23,7 +23,7 @@ data class RiskProfileRequest(
     val maritalStatus: MaritalStatus = MaritalStatus.SINGLE,
 
     val house: HouseRequest? = null,
-    val vehicle: VehicleRequest? = null,
+    val vehicles: List<VehicleRequest>? = null,
 
     @field:ValidRiskQuestions
     @field:Size(min = 3, max = 3)
@@ -36,7 +36,7 @@ data class RiskProfileRequest(
         income = income,
         maritalStatus = maritalStatus,
         house = (house?.mapToDomain()).toOption(),
-        vehicle = (vehicle?.mapToDomain()).toOption()
+        vehicles = vehicles?.map { it.mapToDomain() } ?: emptyList()
     )
 }
 
@@ -47,9 +47,13 @@ data class HouseRequest(
     fun mapToDomain() = House(ownershipStatus = ownershipStatus)
 }
 
-data class VehicleRequest(
+data class VehicleRequest
+(
+   @field:PositiveOrZero
+   val key: Int,
+
     @field:PositiveOrZero
     val year: Int
 ) {
-    fun mapToDomain() = Vehicle(year = year)
+    fun mapToDomain() = Vehicle(key = key, year = year)
 }
