@@ -1,38 +1,48 @@
 package com.origin.risk.domain.engine
 
+typealias ProfileStatusFactory = (riskProfile: RiskProfile) -> ProfileStatus
+
 open class RiskProfile(
     val name: String = "",
     val eligible: Boolean = false,
-    val score: Score = Score(0)
+    val score: Score = Score(0),
+    val profileStatusFactory: ProfileStatusFactory = ::baseProfileStatus
 ) {
     fun ineligible() = RiskProfile(
         name,
         false,
-        score
+        score,
+        profileStatusFactory
     )
 
     fun deduct(points: Int) = RiskProfile(
         name,
         eligible,
-        score.subtract(points)
+        score.subtract(points),
+        profileStatusFactory
     )
 
     fun add(points: Int) = RiskProfile(
         name,
         eligible,
-        score.add(points)
+        score.add(points),
+        profileStatusFactory
     )
 
-    val status: ProfileStatus get() {
-        if(eligible) {
-            return when {
-                score.value <= 0 -> ProfileStatus.ECONOMIC
-                score.value in (1..2) -> ProfileStatus.REGULAR
-                else -> ProfileStatus.RESPONSIBLE
-            }
-        }
+    val status: ProfileStatus get() = profileStatusFactory(this)
 
-        return ProfileStatus.INELIGIBLE
+    companion object {
+        internal fun baseProfileStatus(riskProfile: RiskProfile): ProfileStatus {
+            if(riskProfile.eligible) {
+                return when {
+                    riskProfile.score.value <= 0 -> ProfileStatus.ECONOMIC
+                    riskProfile.score.value in (1..2) -> ProfileStatus.REGULAR
+                    else -> ProfileStatus.RESPONSIBLE
+                }
+            }
+
+            return ProfileStatus.INELIGIBLE
+        }
     }
 }
 

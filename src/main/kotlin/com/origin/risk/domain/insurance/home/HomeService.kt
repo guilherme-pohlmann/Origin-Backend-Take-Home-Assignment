@@ -1,4 +1,4 @@
-package com.origin.risk.domain.insurance
+package com.origin.risk.domain.insurance.home
 
 import com.origin.risk.domain.customer.Customer
 import com.origin.risk.domain.engine.RiskEngine
@@ -10,5 +10,11 @@ internal object HomeService {
             HouseRule,
             LowAgeRule,
             HighIncomeRule,
-            MortgagedHouseRule))
+            MortgagedHouseRule)).let {
+            HomeRiskProfile(
+                    it.name,
+                    it.eligible,
+                    it.score
+            )
+        }
 }

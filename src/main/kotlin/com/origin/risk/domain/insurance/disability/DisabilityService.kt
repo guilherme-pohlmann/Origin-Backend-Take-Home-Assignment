@@ -1,4 +1,4 @@
-package com.origin.risk.domain.insurance
+package com.origin.risk.domain.insurance.disability
 
 import com.origin.risk.domain.customer.Customer
 import com.origin.risk.domain.engine.RiskEngine
@@ -13,5 +13,11 @@ internal object DisabilityService {
             HighIncomeRule,
             MortgagedHouseRule,
             DependentsRule,
-            DisabilityInsuranceMarriedRule))
+            DisabilityInsuranceMarriedRule)).let {
+            DisabilityRiskProfile(
+                    it.name,
+                    it.eligible,
+                    it.score
+            )
+        }
 }

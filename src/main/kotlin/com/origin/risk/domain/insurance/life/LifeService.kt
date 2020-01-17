@@ -1,4 +1,4 @@
-package com.origin.risk.domain.insurance
+package com.origin.risk.domain.insurance.life
 
 import com.origin.risk.domain.customer.Customer
 import com.origin.risk.domain.engine.RiskEngine
@@ -11,5 +11,11 @@ internal object LifeService {
             LowAgeRule,
             HighIncomeRule,
             DependentsRule,
-            LifeInsuranceMarriedRule))
+            LifeInsuranceMarriedRule)).let {
+            LifeRiskProfile(
+                    it.name,
+                    it.eligible,
+                    it.score
+            )
+        }
 }
