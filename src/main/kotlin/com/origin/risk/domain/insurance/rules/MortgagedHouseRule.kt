@@ -7,7 +7,7 @@ import com.origin.risk.domain.engine.Rule
 
 internal object MortgagedHouseRule : Rule {
     override fun apply(customer: Customer, riskProfile: RiskProfile) =
-        if (customer.house.exists { it.ownershipStatus == OwnershipStatus.MORTGAGED })
+        if (customer.house.exists { it.ownershipStatus == OwnershipStatus.OWNED && it.mortgaged })
             riskProfile.add(1)
         else
             riskProfile

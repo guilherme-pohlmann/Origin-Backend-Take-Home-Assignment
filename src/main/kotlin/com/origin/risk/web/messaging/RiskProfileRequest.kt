@@ -42,9 +42,12 @@ data class RiskProfileRequest(
 
 data class HouseRequest(
     @field:NotNull
-    val ownershipStatus: OwnershipStatus
+    val ownershipStatus: OwnershipStatus,
+
+    @field:NotNull
+    val mortgaged: Boolean
 ) {
-    fun mapToDomain() = House(ownershipStatus = ownershipStatus)
+    fun mapToDomain() = House(ownershipStatus = ownershipStatus, mortgaged = mortgaged)
 }
 
 data class VehicleRequest

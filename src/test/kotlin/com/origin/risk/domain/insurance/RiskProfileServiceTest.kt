@@ -6,6 +6,7 @@ import com.origin.risk.domain.customer.MaritalStatus
 import com.origin.risk.domain.assets.House
 import com.origin.risk.domain.assets.OwnershipStatus
 import com.origin.risk.domain.assets.Vehicle
+import com.origin.risk.domain.engine.ProfileStatus
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -60,7 +61,7 @@ class RiskProfileServiceTest {
     @Test
     fun `if the user's house is mortgaged, add 1 risk point to her home score and add 1 risk point to her disability score`() {
         val customer = Customer(
-            house = House(OwnershipStatus.MORTGAGED).toOption(),
+            house = House(OwnershipStatus.OWNED, true).toOption(),
             age = 50
         )
         val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,1))
@@ -106,5 +107,42 @@ class RiskProfileServiceTest {
 
         assert(profiles.first { it.name == "auto" }.score.value == 4)
         assert(profiles.filter { it.name != "auto" }.all { it.score.value == 3 })
+    }
+
+    @Test
+    fun `When the users house is Rented, it receives Renters recommendation`() {
+        val customer = Customer(
+                house = House(OwnershipStatus.RENTED, false).toOption(),
+                age = 40
+        )
+        val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,1))
+
+        assert(profiles.singleOrNull { it.name == "rent" } != null)
+        assert(profiles.single { it.name == "rent" }.status == ProfileStatus.REGULAR)
+    }
+
+    @Test
+    fun `When the users house is Owned, it receives Home recommendation`() {
+        val customer = Customer(
+                house = House(OwnershipStatus.OWNED, false).toOption(),
+                age = 40
+        )
+        val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,1,0))
+
+        assert(profiles.singleOrNull { it.name == "home" } != null)
+        assert(profiles.single { it.name == "home" }.status == ProfileStatus.REGULAR)
+    }
+
+    @Test
+    fun `When the users house is Owned and Mortgaged, it receives Home recommendation`() {
+        val customer = Customer(
+                house = House(OwnershipStatus.OWNED, true).toOption(),
+                age = 40,
+                income = 500000
+        )
+        val profiles = RiskProfileService.riskProfile(customer, arrayOf(1,0,0))
+
+        assert(profiles.singleOrNull { it.name == "home" } != null)
+        assert(profiles.single { it.name == "home" }.status == ProfileStatus.ECONOMIC)
     }
 }

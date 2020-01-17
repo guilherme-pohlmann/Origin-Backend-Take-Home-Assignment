@@ -19,7 +19,7 @@ class RiskProfileController {
         val profiles = RiskProfileService.riskProfile(customer, riskQuestions!!)
 
         return ResponseEntity(
-            RiskProfileResponse.mapFromDomain(profiles),
+            RiskProfileResponse.mapFromDomain(profiles.toList()),
             HttpStatus.OK
         )
     }

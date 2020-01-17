@@ -1,7 +1,11 @@
 package com.origin.risk.web.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.origin.risk.domain.assets.OwnershipStatus
+import com.origin.risk.web.messaging.HouseRequest
 import com.origin.risk.web.messaging.RiskProfileRequest
+import com.origin.risk.web.messaging.RiskProfileResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -135,5 +139,41 @@ class RiskProfileControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `When the users house is Rented, it receives Renters recommendation`() {
+        val request = RiskProfileRequest(
+                house = HouseRequest(OwnershipStatus.RENTED, false),
+                riskQuestions = arrayOf(1,1,1)
+        )
+
+        val mvcResult = mockMvc.perform(post("/insurance/risk-profile")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn()
+
+        val responseObject = objectMapper.readValue<RiskProfileResponse>(mvcResult.response.contentAsString)
+        assert(responseObject.home == null)
+        assert(responseObject.rent != null)
+    }
+
+    @Test
+    fun `When the users house is Owned, it receives Home recommendation`() {
+        val request = RiskProfileRequest(
+                house = HouseRequest(OwnershipStatus.OWNED, false),
+                riskQuestions = arrayOf(1,1,1)
+        )
+
+        val mvcResult = mockMvc.perform(post("/insurance/risk-profile")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn()
+
+        val responseObject = objectMapper.readValue<RiskProfileResponse>(mvcResult.response.contentAsString)
+        assert(responseObject.home != null)
+        assert(responseObject.rent == null)
     }
 }

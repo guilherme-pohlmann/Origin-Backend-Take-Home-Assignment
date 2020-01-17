@@ -103,7 +103,7 @@ class RulesTest {
     inner class MortgagedHouseRuleTest {
         @Test
         fun `if the user's house is mortgaged, add 1 risk point`() {
-            val customer = Customer(house = House(OwnershipStatus.MORTGAGED).toOption())
+            val customer = Customer(house = House(OwnershipStatus.OWNED, true).toOption())
             val profile = RiskProfile(score = Score(1))
 
             assert(MortgagedHouseRule.apply(customer, profile).score.value == 2)
